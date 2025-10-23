@@ -1,0 +1,74 @@
+import { MyNode, Queue } from "./queue";
+import * as readline from "readline";
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function askQuestion(query: string): Promise<string> {
+  return new Promise((resolve) => rl.question(query, resolve));
+}
+
+async function main() {
+  console.log("FILA CIRCULAR GENÉRICA");
+
+
+  const sizeInput = await askQuestion("Digite o tamanho máximo da fila: ");
+  const queueSize = parseInt(sizeInput);
+
+  if (isNaN(queueSize) || queueSize <= 0) {
+    console.log("Tamanho inválido. Encerrando.");
+    rl.close();
+    return;
+  }
+
+  const queue = new Queue<any>();
+  let count = 0;
+
+  console.log(`\nFila criada com tamanho máximo = ${queueSize}\n`);
+
+
+  while (true) {
+    const valueInput = await askQuestion("Digite um item para adicionar na fila: ");
+    const value = isNaN(Number(valueInput)) ? valueInput : Number(valueInput);
+    const node = new MyNode(value);
+
+    if (queue.length < queueSize) {
+      
+      queue.add(node);
+      count++;
+      console.log(`Item '${value}' adicionado!`);
+    } else {
+      
+      console.log("\n Fila cheia!");
+      const overwrite = await askQuestion("Deseja retirar o primeiro item e adicionar outro no final? (s/n): ");
+
+      if (overwrite.toLowerCase() === "s") {
+        const removed = queue.remove();
+        console.log(`Item '${removed.value}' removido da cabeça.`);
+        queue.add(node);
+        console.log(`Item '${value}' adicionado no final.`);
+      } else {
+        console.log("Encerrando inserções.");
+        break;
+      }
+    }
+
+    
+    process.stdout.write("Estado atual da fila => ");
+    queue.print();
+
+    
+    if (count % queueSize === 0) {
+      console.log("Fila circular completou uma volta!\n");
+    }
+  }
+
+  console.log("\nFila final");
+  queue.print();
+
+  rl.close();
+}
+
+main();
