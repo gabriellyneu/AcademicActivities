@@ -1,0 +1,47 @@
+import process = require("process");
+import { MyNode, Stack } from "./stack";  
+import * as readline from "readline";    
+
+
+let pilha = new Stack<String>();
+
+function verificarExpressao(expressao: String): boolean {
+  pilha = new Stack<String>(); 
+
+  const aberturas = "([{";
+  const fechamentos = ")]}";
+  const pares: Record<string, string> = {
+    ")": "(",
+    "]": "[",
+    "}": "{"
+  };
+
+  for (const char of expressao) {
+    if (aberturas.includes(char)) {
+      const node = new MyNode<String>(char);
+      pilha.push(node);
+    } else if (fechamentos.includes(char)) {
+      const node = pilha.pop();
+
+      if (!node || node.value !== pares[char]) {
+        return false;
+      }
+    }
+  }
+
+  return pilha.is_empty();
+}
+
+
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question("Digite uma expressão para verificar: ", (expr) => {
+  const ok = verificarExpressao(expr);
+  console.log(`${expr} → ${ok ? "✅ Correta" : "❌ Incorreta"}`);
+  rl.close();
+});
+
