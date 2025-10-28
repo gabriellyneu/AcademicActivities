@@ -1,0 +1,50 @@
+SELECT
+	a.nome,
+	COUNT(l.id_livro) AS total_livros
+FROM autor a
+
+JOIN livro l ON a.id_autor = l.id_autor
+
+GROUP BY a.nome;
+
+
+SELECT
+	a.nome,
+	TRUNC(AVG(l.ano_publicacao)) AS media_ano_publicacao
+FROM autor a
+
+JOIN livro l ON a.id_autor = l.id_autor
+
+GROUP BY a.nome;
+
+
+SELECT
+	a.nome,
+	COUNT(el.id_livro) AS total_livros_emprestados
+FROM aluno a
+
+JOIN emprestimo e ON a.id_aluno = e.id_aluno
+JOIN emprestimoLivro el ON e.id_emprestimo = el.id_emprestimo
+
+GROUP BY a.nome;
+
+
+SELECT
+	a.curso,
+	COUNT(e.id_emprestimo) AS total_eventos_emprestimo
+FROM aluno a
+
+JOIN emprestimo e ON a.id_aluno = e.id_aluno
+
+GROUP BY a.curso;
+
+
+SELECT
+	a.nome,
+	COUNT(l.id_livro) AS total_livros
+FROM autor a
+
+JOIN livro l ON a.id_autor = l.id_autor
+
+GROUP BY a.nome
+HAVING COUNT(l.id_livro) > 1;
