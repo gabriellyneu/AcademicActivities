@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Associação Pessoa x Carro</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+background:#f4f4f4;
+}
+
+input{
+padding:8px;
+margin:5px;
+}
+
+button{
+padding:8px 12px;
+cursor:pointer;
+}
+
+table{
+margin-top:20px;
+border-collapse: collapse;
+width:70%;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Associar Pessoa a Carro</h1>
+
+<input id="pessoaId" placeholder="ID da Pessoa">
+<input id="carroId" placeholder="ID do Carro">
+
+<button onclick="associar()">Associar</button>
+
+<h2>Lista de Associações</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Pessoa</th>
+<th>Email</th>
+<th>Carro</th>
+<th>Marca</th>
+</tr>
+</thead>
+
+<tbody id="listaAssoc"></tbody>
+
+</table>
+
+<script>
+
+async function associar(){
+
+const pessoaId = document.getElementById("pessoaId").value
+const carroId = document.getElementById("carroId").value
+
+await fetch("http://localhost:3000/associacoes",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({pessoaId:Number(pessoaId),carroId:Number(carroId)})
+
+})
+
+listar()
+}
+
+async function listar(){
+
+const res = await fetch("http://localhost:3000/associacoes")
+const dados = await res.json()
+
+let html=""
+
+dados.forEach(a=>{
+
+html += `
+<tr>
+<td>${a.id}</td>
+<td>${a.pessoa.nome}</td>
+<td>${a.pessoa.email}</td>
+<td>${a.carro.modelo}</td>
+<td>${a.carro.marca}</td>
+</tr>
+`
+
+})
+
+document.getElementById("listaAssoc").innerHTML = html
+
+}
+
+listar()
+
+</script>
+
+</body>
+</html>

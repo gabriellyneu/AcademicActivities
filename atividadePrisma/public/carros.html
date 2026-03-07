@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastro de Carros</title>
+
+<style>
+body{
+font-family: Arial;
+margin:40px;
+background:#f4f4f4;
+}
+
+h1{
+color:#333;
+}
+
+input{
+padding:8px;
+margin:5px;
+}
+
+button{
+padding:8px 12px;
+cursor:pointer;
+}
+
+table{
+margin-top:20px;
+border-collapse: collapse;
+width:60%;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#ddd;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Cadastrar Carro</h1>
+
+<input id="modelo" placeholder="Modelo">
+<input id="marca" placeholder="Marca">
+<input id="ano" placeholder="Ano">
+
+<button onclick="criarCarro()">Salvar</button>
+
+<h2>Lista de Carros</h2>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modelo</th>
+<th>Marca</th>
+<th>Ano</th>
+</tr>
+</thead>
+
+<tbody id="listaCarros"></tbody>
+</table>
+
+<script>
+
+async function criarCarro(){
+
+const modelo = document.getElementById("modelo").value
+const marca = document.getElementById("marca").value
+const ano = document.getElementById("ano").value
+
+await fetch("http://localhost:3000/carros",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({modelo,marca,ano})
+})
+
+listarCarros()
+}
+
+async function listarCarros(){
+
+const res = await fetch("http://localhost:3000/carros")
+const carros = await res.json()
+
+let html=""
+
+carros.forEach(c=>{
+
+html += `
+<tr>
+<td>${c.id}</td>
+<td>${c.modelo}</td>
+<td>${c.marca}</td>
+<td>${c.ano}</td>
+</tr>
+`
+
+})
+
+document.getElementById("listaCarros").innerHTML = html
+}
+
+listarCarros()
+
+</script>
+
+</body>
+</html>

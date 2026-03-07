@@ -1,0 +1,22 @@
+<h1>Cadastrar Pessoa</h1>
+
+<input id="nome" placeholder="Nome">
+<input id="email" placeholder="Email">
+
+<button onclick="salvar()">Salvar</button>
+
+<script>
+async function salvar() {
+
+  const nome = document.getElementById("nome").value
+  const email = document.getElementById("email").value
+
+  await fetch("http://localhost:3000/pessoas", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, email })
+  })
+
+  alert("Pessoa cadastrada")
+}
+</script>
